@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!---- Cloudflare Start---->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <!---- Cloudflare End---->
+    <!---- Google Analytics Start ---->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-10894361-16', 'auto');
+        ga('require', 'linkid');
+        ga('send', 'pageview');
+
+        function getParameterByName(name) {
+            var url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+    <!---- Google Analytics End ---->        
+    <title>Demo</title>
+
+    <style>
+.background {
+        
+        position: fixed;
+        bottom: 0px;
+        right: 25px;
+        z-index: 20;
+  background-color: #fff;
+    }
+    
+    .livechat-container {
+       
+            box-sizing: border-box;
+        
+    }
+    .livechat-container:before {
+            box-sizing: border-box;
+        
+    }
+    .livechat-container:after{
+        box-sizing: border-box;
+    }
+    .livechat-container a{
+    
+        width: 100%;
+    min-width: 320px;
+  text-decoration: none;
+    
+    }
+.livechat-container a:visited{
+    
+        color: #fff;
+    
+    }
+    #chat-container {display:none;height: 500px;}
+    
+    .livechat-button {
+        width: 100%;
+        font-family: adelle-sans,sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: #004B81;
+        color: #fff;
+        display: block;
+        padding: 10px 20px;
+        text-decoration: none;
+    }
+    
+    .webchat {
+      display: none;
+        background: #fff;
+        padding: 20px;
+        width: 320px;
+        max-width: 100%;
+    }
+    .webchat-row {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 10px;
+    
+    }
+    .webchat-row label {
+        width: auto;
+        font-family: adelle-sans,sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 1.4;
+        display: inline-block;
+    }
+     .webchat-row input {
+        width: 62%;
+        padding: 10px;
+        font-family: adelle-sans,sans-serif;
+        font-weight: 400;
+        border: 1px solid #dadada;
+        font-size: 14px;
+        color: #34383b;
+        transition: .2s all ease-in;
+     }
+    .webchat-row input:focus {
+        border-color: #004B81;
+    }
+    .c-button {
+        display: inline-block;
+        outline: none;
+        border: none;
+        background: #0099DB;
+        padding: 10px 20px;
+        font-size: 13px;
+        color: #fff;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: .2s all ease-in;
+        margin-top: 20px;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        
+    }
+    .c-button:hover {
+        color: #004B81;
+        text-decoration: none;
+    }
+    </style>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+<!---- PureCloud Details 
+        Org: Genesys MNL
+        Widget: 1.0
+        Build: v3.8
+        By: @mfrigillana
+    ---->
+
+<!---- PureCloud Widgetv1 Start ---->
+<script
+  id="purecloud-webchat-js"
+  type="text/javascript"
+  src="https://apps.mypurecloud.com/webchat/jsapi-v1.js"
+  region="us-east-1"
+  org-guid="8e380ad4-8188-474b-a0e1-c761c7b6fcf6"
+  deployment-key="ed1591d0-c3da-4879-a3a2-7a5792b7ef45"
+></script>
+<!---- PureCloud Widgetv1 Start ---->
+
+    <script>
+    
+$(document).ready(function(){
+
+$('#chat-button').on('click', function(){
+    console.log('now clicked');
+    var firstName = document.getElementById('first-name').value;
+    var lastName = document.getElementById('last-name').value;
+    //var email = document.getElementById('email-address').value;
+    //var company = document.getElementById('company').value;
+    var telephoneNumber = document.getElementById('phone-number').value;
+    let chatConfig = {
+        webchatAppUrl: "https://apps.mypurecloud.com/webchat",
+        webchatServiceUrl: "https://realtime.mypurecloud.com:443",
+        orgId: "28489",
+        orgGuid: "8e380ad4-8188-474b-a0e1-c761c7b6fcf6",
+        orgName: "Manila",
+        queueName: "MF_ASCMv1",
+        logLevel: "DEBUG",
+        locale: "en",
+        data: {
+            firstName: "first-name",
+            lastName: "last-name",
+            addressStreet: "",
+            addressCity: "",
+            addressPostalCode: "",
+            addressState: "",
+            phoneNumber: "phone-number",
+            company: "company",
+            email: "email-address",
+            customField2Label: "",
+            customField2: "",
+            customField3Label: "",
+            customField3: ""
+        },
+        companyLogo: {
+            width: 285,
+            height: 73,
+            url: "https://d3a63qt71m2kua.cloudfront.net/developer-tools/1563/assets/images/PC-blue-nomark.png"
+        },
+        companyLogoSmall: {
+            width: 25,
+            height: 25,
+            url: "https://d3a63qt71m2kua.cloudfront.net/developer-tools/1563/assets/images/companylogo.png"
+        },
+        agentAvatar: {
+            width: 462,
+            height: 462,
+            url: "https://d3a63qt71m2kua.cloudfront.net/developer-tools/1563/assets/images/agent.jpg"
+        },
+        welcomeMessage: "Thanks for chatting using the dev tools chat page. Slow? email us \devtool@gmail.com\.",
+        cssClass: "webchat-frame",
+        css: {
+            width: "100%",
+            height: "100%"
+        },
+        reconnectEnabled: true,
+
+    //Allowed reconnect to index
+        reconnectOrigins: ['https://mslab18.github.io/24601'],
+    //Cobrowse config 
+        cobrowseConfig: {
+            deploymentKey: "qEdiGZ0mlVeZw9lFF6h7NG1Alcn7alHB",
+            },
+                offlineSchedules: [
+                    {
+                        day: 'Saturday,Sunday',
+                        "city": "America/New_York"
+                    },
+
+                    /*The proprty 'month' below is 0 index based i.e. month January starts with 0*/
+                    /*2019*/
+                    {
+                        "date": "01",
+                        "month": "06",
+                        "year": "2019",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "05",
+                        "month": "07",
+                        "year": "2019",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "02",
+                        "month": "08",
+                        "year": "2019",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "14",
+                        "month": "09",
+                        "year": "2019",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "25",
+                        "month": "11",
+                        "year": "2019",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "26",
+                        "month": "11",
+                        "year": "2019",
+                        "city": "America/New_York"
+                    },
+
+                    /*2020*/
+                    {
+                        "date": "01",
+                        "month": "00",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "17",
+                        "month": "01",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "10",
+                        "month": "03",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "18",
+                        "month": "04",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "01",
+                        "month": "06",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "03",
+                        "month": "07",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "07",
+                        "month": "08",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "12",
+                        "month": "09",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "25",
+                        "month": "11",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "26",
+                        "month": "11",
+                        "year": "2020",
+                        "city": "America/New_York"
+                    },
+
+                    /*2021*/
+                    {
+                        "date": "01",
+                        "month": "00",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "15",
+                        "month": "01",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "02",
+                        "month": "03",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "24",
+                        "month": "04",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "01",
+                        "month": "06",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "02",
+                        "month": "07",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "06",
+                        "month": "08",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "11",
+                        "month": "09",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "25",
+                        "month": "11",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "26",
+                        "month": "11",
+                        "year": "2021",
+                        "city": "America/New_York"
+                    },
+
+                    /*2022*/
+                    {
+                        "date": "01",
+                        "month": "00",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "21",
+                        "month": "01",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "15",
+                        "month": "03",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "23",
+                        "month": "04",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "01",
+                        "month": "06",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "01",
+                        "month": "07",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "05",
+                        "month": "08",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "10",
+                        "month": "09",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "25",
+                        "month": "11",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "26",
+                        "month": "11",
+                        "year": "2022",
+                        "city": "America/New_York"
+                    },
+
+                    /*2023*/
+                    {
+                        "date": "01",
+                        "month": "00",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "20",
+                        "month": "01",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "07",
+                        "month": "03",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "22",
+                        "month": "04",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "01",
+                        "month": "06",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "07",
+                        "month": "07",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "04",
+                        "month": "08",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "09",
+                        "month": "09",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "25",
+                        "month": "11",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "26",
+                        "month": "11",
+                        "year": "2023",
+                        "city": "America/New_York"
+                    },
+
+                    /*2024*/
+                    {
+                        "date": "01",
+                        "month": "00",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "19",
+                        "month": "01",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "29",
+                        "month": "02",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "20",
+                        "month": "04",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "01",
+                        "month": "06",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "05",
+                        "month": "07",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "02",
+                        "month": "08",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "14",
+                        "month": "09",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "25",
+                        "month": "11",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    },
+                    {
+                        "date": "26",
+                        "month": "11",
+                        "year": "2024",
+                        "city": "America/New_York"
+                    }
+                ],
+
+                onlineSchedules: [{
+                    "day": "Monday-Thursday",
+                    "time": "0900-2000",
+                    "city": "America/New_York"
+                },
+                {
+                    "day": "Friday",
+                    "time": "0900-1800",
+                    "city": "America/New_York"
+                }]            
+        };
+    
+    window.PURECLOUD_WEBCHAT_FRAME_CONFIG = {
+    containerEl: 'chat-container'
+};
+ININ.webchat.create(chatConfig)
+    .then(function (webchat) {
+        if (webchat.isAutoJoined()) {
+        } else {
+            
+                var firstName = document.getElementById('first-name').value;
+                var lastName = document.getElementById('last-name').value;
+                //var email = document.getElementById('email-address').value;
+                //var company = document.getElementById('company').value;
+                var telephoneNumber = document.getElementById('phone-number').value;
+                
+                webchat.getConfig().setData({
+                    firstName: firstName,
+                    lastName: lastName,
+                    //email: email,
+                    //company: company,
+                    phoneNumber: telephoneNumber,
+                    
+                    //customField1Label: 'Email Address',
+                    //customField1: email,
+                    //customField2Label: 'Company',
+                    //customField2: company
+       
+                });
+                console.log('clicked');
+                // Alternatively, call webchat.renderPopup here. Note that reconnects do not apply to popup chat.
+                //webchat.renderFrame({
+                //    containerEl: 'chat-container'
+                //});
+        webchat.renderPopup({
+        width: 500,
+        height: 500,
+        title: 'Chat'
+        });
+            
+        }
+    })
+    .catch(function (err){
+        console.log(err);
+    });
+});
+    
+$('.livechat-button').on('click', function(){
+
+
+if ($('.webchat').is(':visible')) {
+$('.webchat').hide();
+}else{
+$('.webchat').show();
+}
+
+});
+$('#chat-button').on('click', function(){
+//$('.webchat').hide();
+
+});
+
+
+});
+
+    </script>
+
+</head>
+<body>
+    <div class="background">
+        <div class="livechat-container">
+        <a href="#" class="livechat-button">Live Chat</a>
+        <div class="webchat">
+        <form id="chatForm">
+            <div class="webchat-row">
+            <label for="first-name">First Name:</label>
+            <input type="text" name="firstName" id="first-name" />
+            </div>
+            <div class="webchat-row">
+            <label for="last-name">Last Name:</label>
+            <input type="text" name="lastName" id="last-name" />
+            </div>
+            <!--div class="webchat-row">
+            <label for="email-address">Email Address:</label>
+            <input type="email" name="emailAddress" id="email-address" />
+            </div>
+            <div class="webchat-row">
+            <label for="company">Company:</label>
+            <input type="text" name="company" id="company" />
+            </div--->
+            <div class="webchat-row">
+            <label for="phone-number">Phone Number:</label>
+            <input type="number" name="phoneNumber" id="phone-number" />
+            </div>
+            <input type="button" id="chat-button" class="c-button" value="Start Chat" />
+        </form>
+        </div>
+        <div id="chat-container">&nbsp;</div>
+        </div>
+        </div>
+</body>
+</html>
